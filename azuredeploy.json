@@ -93,12 +93,14 @@
         },
         "workspaceName": {
             "type": "string",
+            "defaultValue": "DefaultResourceGroup-bis-eus",
             "metadata": {
                 "description": "Specify the name of the OMS workspace"
             }
         },
         "omsWorkspaceId": {
             "type": "string",
+            "defaultValue": "[concat('/subscriptions/', subscription().subscriptionId, '/resourcegroups/defaultresourcegroup-eus/providers/microsoft.operationalinsights/workspaces/', 'DefaultResourceGroup-bis-eus')]",
             "metadata": {
                 "description": "Specify the resource id of the OMS workspace"
             }
