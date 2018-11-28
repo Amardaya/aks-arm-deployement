@@ -35,7 +35,7 @@
     "resources": [
         {
             "type": "Microsoft.OperationalInsights/workspaces",
-            "name": "[parameters('workspaceName')]",
+            "name": "[concat(parameters('workspaceName'), '-', subscription().subscriptionId)]",
             "apiVersion": "2017-03-15-preview",
             "location": "[parameters('location')]",
             "properties": {
