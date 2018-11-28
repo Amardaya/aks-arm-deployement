@@ -93,14 +93,13 @@
         },
         "workspaceName": {
             "type": "string",
-            "defaultValue": "DefaultResourceGroup-bis-eus",
             "metadata": {
                 "description": "Specify the name of the OMS workspace"
             }
         },
         "omsWorkspaceId": {
             "type": "string",
-            "defaultValue": "[concat('/subscriptions/', subscription().subscriptionId, '/resourcegroups/defaultresourcegroup-eus/providers/microsoft.operationalinsights/workspaces/', 'DefaultResourceGroup-bis-eus')]",
+            "defaultValue": "[concat('/subscriptions/', subscription().subscriptionId, '/resourcegroups/',parameters('workspaceName')/providers/microsoft.operationalinsights/workspaces/', parameters('workspaceName'),'-',subscription().subscriptionId)]",
             "metadata": {
                 "description": "Specify the resource id of the OMS workspace"
             }
@@ -204,8 +203,8 @@
             "type": "Microsoft.Resources/deployments",
             "name": "SolutionDeployment",
             "apiVersion": "2017-05-10",
-            "resourceGroup": "[split(parameters('omsWorkspaceId'),'/')[4]]",
-            "subscriptionId": "[split(parameters('omsWorkspaceId'),'/')[2]]",
+            "resourceGroup": "[parameters('omsWorkspaceName')]",
+            "subscriptionId": "[subscription().subscriptionId]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -240,8 +239,11 @@
             "type": "Microsoft.Resources/deployments",
             "name": "WorkspaceDeployment",
             "apiVersion": "2017-05-10",
-            "resourceGroup": "[split(parameters('omsWorkspaceId'),'/')[4]]",
-            "subscriptionId": "[split(parameters('omsWorkspaceId'),'/')[2]]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'WorkspaceResourceGroupDeployment')]"
+            ],
+            "resourceGroup": "[parameters('omsWorkspaceName')]",
+            "subscriptionId": "[subscription().subscriptionId]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -264,6 +266,30 @@
                     ]
                 }
             }
+        },
+        {
+            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+            "contentVersion": "1.0.0.1",
+            "name": "WorkspaceResourceGroupDeployment",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "parameters": {
+                "rgName": {
+                    "type": "string"
+                },
+                "rgLocation": {
+                    "type": "string"
+                }
+            },
+            "variables": {},
+            "resources": [
+                {
+                    "type": "Microsoft.Resources/resourceGroups",
+                    "apiVersion": "2018-05-01",
+                    "location": "[parameters('location')]",
+                    "name": "[parameters('workspaceName')]",
+                    "properties": {}
+                }
+            ]
         }
     ],
     "outputs": {
