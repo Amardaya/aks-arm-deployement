@@ -1,51 +1,24 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "workspaceName": {
-            "type": "String",
-            "metadata": {
-              "description": "Specifies the name of the workspace."
-            }
-        },
-        "location": {
-            "type": "String",
-            "allowedValues": [
-              "eastus",
-              "westus"
-            ],
-            "defaultValue": "eastus",
-            "metadata": {
-              "description": "Specifies the location in which to create the workspace."
-            }
-        },
-        "sku": {
-            "type": "String",
-            "allowedValues": [
-              "Standalone",
-              "PerNode",
-              "PerGB2018"
-            ],
-            "defaultValue": "Standalone",
-            "metadata": {
-            "description": "Specifies the service tier of the workspace: Standalone, PerNode, Per-GB"
-        }
-          }
+      "rgLocation": {
+        "type": "string",
+        "defaultValue": "East US"
+      },
+      "rgName": {
+        "type": "string",
+        "defaultValue": "myResourceGroup"
+      }
     },
+    "variables": {},
     "resources": [
-        {
-            "type": "Microsoft.OperationalInsights/workspaces",
-            "name": "[concat(parameters('workspaceName'), '-', subscription().subscriptionId)]",
-            "apiVersion": "2017-03-15-preview",
-            "location": "[parameters('location')]",
-            "properties": {
-                "sku": {
-                    "Name": "[parameters('sku')]"
-                },
-                "features": {
-                    "searchVersion": 1
-                }
-            }
-          }
-       ]
-    }
+      {
+        "type": "Microsoft.Resources/resourceGroups",
+        "apiVersion": "2018-05-01",
+        "location": "[parameters('rgLocation')]",
+        "name": "[parameters('rgName')]"
+      }
+    ],
+    "outputs": {}
+  }

@@ -159,6 +159,7 @@
         {
             "apiVersion": "2018-03-31",
             "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'WorkspaceResourceGroupDeployment')]",
                 "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
             ],
             "type": "Microsoft.ContainerService/managedClusters",
@@ -232,6 +233,7 @@
                 }
             },
             "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'WorkspaceResourceGroupDeployment')]",
                 "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
             ]
         },
