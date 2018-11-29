@@ -18,3 +18,9 @@ the template was contain  set of parameters with default values that can be chan
 | `Location`        | HTTP timeout for writing a response body from your function (in seconds). Default: `60s`        |
 | `Dns Prefix`         | HTTP timeout for reading the payload from the client caller (in seconds). Default: `60s`        |
 | `Agent Count`    | Image pull policy for deployed functions (`Always`, `IfNotPresent`, `Never`.  Default: `Always` |
+| `Service Principal App ID`    | Image pull policy for deployed functions (`Always`, `IfNotPresent`, `Never`.  Default: `Always` |
+| `Service Principal Secret`    | Image pull policy for deployed functions (`Always`, `IfNotPresent`, `Never`.  Default: `Always` |
+| `Enable Oms Agent`    | Image pull policy for deployed functions (`Always`, `IfNotPresent`, `Never`.  Default: `Always` |
+| `Enable Http Routing Count`    | Image pull policy for deployed functions (`Always`, `IfNotPresent`, `Never`.  Default: `Always` |
+| `Max Pod`    | Image pull policy for deployed functions (`Always`, `IfNotPresent`, `Never`.  Default: `Always` |
+| `Enable RBAC Pod`    | Image pull policy for deployed functions (`Always`, `IfNotPresent`, `Never`.  Default: `Always` |
