@@ -1,6 +1,8 @@
-# Azure Kubernetes services ARM Template
+# Create Azure Kubernetes Service Cluster
+## Using ARM Template
 
-This template deploys an AKS cluster with predefined parameters used to test openfaas.
+This template deploys an AKS cluster with predefined parameters optimized for my openfaas usage.
+to deploy this template we just need to hit the button below no need to install anything in your machine 
 
 [![Deploy to Azure](https://azuredeploy.net/deploybutton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FAmardaya%2Faks-arm-deployement%2Fmaster%2Fazuredeploy.json)
 
@@ -25,10 +27,9 @@ the template was contain  set of parameters with default values that can be chan
 | `Enable RBAC Pod`    | boolean flag to enable RBAC (`true`, `false`.  Default: `true` |
 
 
-### Create AKS Cluster using Azure Cli
-another way to create a cluster is to use Azure Cli ,to be able to run this you need to make sure that you have the latest Azure Cli installed in your machine 
+## Create AKS Cluster using Azure Cli
+the other way to create aks cluster is to use Azure Cli ,to be able to run this you need to make sure that you have the latest Azure Cli installed in your machine 
 
 ```azurecli
-
-az aks create --resource-group $yourressourcegroup --name $yourclustername --node-count 3 -s Standard_E4s_v3 -p AKSAzureCliCluster -m 30 -k 1.11.4 --enable-addons monitoring -a http_application_routing --generate-ssh-keys 
+az aks create --resource-group $<Yourressourcegroup> --name <$Yourclustername> --node-count 3 -s Standard_E4s_v3 -p <$Yourdnsprefix> -m 30 -k 1.11.4 --enable-addons monitoring -a http_application_routing --generate-ssh-keys 
 ```

@@ -254,7 +254,7 @@
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationalInsights/workspaces",
                             "location": "[parameters('workspaceRegion')]",
-                             "name": "[concat(parameters('workspaceName')]",
+                             "name": "[parameters('workspaceName')]",
                             "properties": {
                                 "sku": {
                                     "name": "[parameters('omsSku')]"
