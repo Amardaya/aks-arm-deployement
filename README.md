@@ -11,7 +11,7 @@ See https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough  for a wal
 
 
 ### Configuration via Environmental variables
-the template was contain  set of parameters with default values that can be changed during the deployment such us the Ressource Name here is the list of some parameters that can be changed please need we will need to create a service principal for the Kubernetes Cluster to interact with Azure APIs see https://github.com/MicrosoftDocs/azure-docs/blob/master/articles/aks/kubernetes-service-principal.md on how to do it 
+the template contains  set of parameters with default values that can be changed during the deployment such us the Ressource Name here is the list of some parameters that can be changed please need we will need to create a service principal for the Kubernetes Cluster to interact with Azure APIs see https://github.com/MicrosoftDocs/azure-docs/blob/master/articles/aks/kubernetes-service-principal.md on how to do it 
 
 | Option                 | Usage                                                                                           |
 |------------------------|-------------------------------------------------------------------------------------------------|
