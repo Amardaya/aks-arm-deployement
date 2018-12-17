@@ -1,0 +1,65 @@
+###Create a new Resource Group
+az group create -l eastus2 -n OpenFaasKube 
+###Create an new AKS cluster with 3 nodes and E4s_v3 as vm-size
+az aks create -g OpenFaasKube -n kubecluster --node-count 3 -s Standard_E4s_v3 -k 1.11.5 --enable-addons monitoring -a http_application_routing --generate-ssh-keys
+###Create a Static Public Address in the node resource group that was created during the AKS cluster creation (for SSL/TSL), 
+az network public-ip create --resource-group MC_OpenFaasKube_kubecluster_eastus2 --name ingressipaddress --allocation-method static
+###Register a new A record for your hostname that point to the External IP Address generated above  in your DNS provider (mine is kubecluster.amardaya.com)
+########################################################################
+########################################################################
+##install NGINX ingress using Helm Chart 
+
+##initialize helm on your AKS Cluster
+
+kubectl -n kube-system create sa tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller 
+
+helm init --skip-refresh --upgrade --service-account tiller
+
+##install ingress
+helm install stable/nginx-ingress --namespace kube-system --set controller.replicaCount=2 --set controller.service.loadBalancerIP=52.177.216.57
+
+##install cert-manager to request TLS certificates
+helm install --name cert-manager --namespace kube-system stable/cert-manager 
+
+###########################################################################
+###########################################################################
+
+################################Install openFaas using Helm and make sure that ingress is enabled 
+
+kubectl apply -f https://raw.githubusercontent.com/openfaas/faas-netes/master/namespaces.yml
+
+#kubectl -n openfaas create secret generic basic-auth --from-literal=basic-auth-user=admin --from-literal=basic-auth-password=Younes04
+
+helm repo update && helm upgrade openfaas --install openfaas/openfaas --namespace openfaas --set gateway.replicas=2 --set functionNamespace=openfaas-fn --set ingress.enabled=true  --set queueWorker.replicas=2
+
+#Create ingress resource for OpenFaas
+##you need to create certificate issuer resources to get TLS certificates 
+##staging certificate
+kubectl apply -f faas-staging-issuer.yml ##-n openfaas
+##production certificate
+kubectl apply -f faas-production-issuer.yml 
+
+##create a password file for openfaas basic authentication and after run
+kubectl create secret generic basic-auth --from-file=auth -n openfaas
+
+kubectl apply -f faas-ingress-ressource.yaml -n openfaas
+kubectl apply -f certificate.yaml
+
+
+################## install and Configure Prometheus and Grafana to monitor the AKS Cluster 
+
+helm repo add coreos https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
+
+helm install coreos/prometheus-operator --name prometheus-operator --namespace monitoring
+helm upgrade --install kube-prometheus coreos/kube-prometheus --namespace monitoring -f ./prometheus/kube-prometheus-values.yml
+helm upgrade --install kube-grafana coreos/grafana --namespace monitoring -f ./prometheus/kube-grafana-values.yml
+##helm install coreos/kube-prometheus --name kube-prometheus --namespace monitoring 
+
+####update this servicemonitors by changing https-metrics to use http-metrics
+kubectl -n monitoring edit servicemonitors kube-prometheus-exporter-kubelets
+
+kubectl apply -f kube-grafana-ingress-ressource.yml -n monitoring
+
+kubectl -n monitoring expose deployment grafana-grafana --type=LoadBalancer --name=grafana-gateway
+

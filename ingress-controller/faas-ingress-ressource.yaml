@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: faas-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-type: basic
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - amardayakube.eastus2.cloudapp.azure.com 
+    secretName: faas-letsencrypt-production
+  rules:
+  - host: amardayakube.eastus2.cloudapp.azure.com 
+    http:
+      paths:
+      - path: /faas-admin
+        backend:
+          serviceName: gateway
+          servicePort: 8080

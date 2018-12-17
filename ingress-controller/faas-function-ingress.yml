@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: faas-function-ingress
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: letsencrypt-production
+    ingress.kubernetes.io/whitelist-source-range: "40.84.30.147,104.208.155.200,104.208.158.174,104.208.140.40,40.70.131.151,40.70.29.214,40.70.26.154,40.70.27.236"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - amardayakube.eastus2.cloudapp.azure.com
+    secretName: faas-letsencrypt-production
+  rules:
+  - host: amardayakube.eastus2.cloudapp.azure.com
+    http:
+      paths:
+      - path: /functions
+        backend:
+          serviceName: gateway
+          servicePort: 8080
